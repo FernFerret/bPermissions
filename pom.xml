@@ -24,10 +24,11 @@
         <!-- Bukkit-related stuff -->
         <repository>
             <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/artifactory/repo</url>
+            <url>http://repo.bukkit.org/content/repositories/public</url>
         </repository>
     </repositories>
     <build>
+        <defaultGoal>clean package</defaultGoal>
         <sourceDirectory>${basedir}/src/</sourceDirectory>
         <plugins>
             <plugin>
