@@ -12,7 +12,7 @@ Commands are now a sequence of commands rather than one horribly long string!
 ```
 
 ### Negative permissions?
-Just prefix the permission node with the "^" symbol for example "^node2.node" will mean that player.hasPermission("node2.node") will return false nomatter what.
+Just prefix the permission node with the `^` symbol for example `^node2.node` will mean that `player.hasPermission("node2.node")` will return false nomatter what.
 
 ### Spacing?
 Yes, unfortunately the expanding config file means spacing has had to be added to the config files.
