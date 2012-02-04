@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.bananaco</groupId>
     <artifactId>bPermissions</artifactId>
@@ -18,9 +18,9 @@
         </repository>-->
         <!--  WorldEdit/WorldGuard-related stuff -->
         <repository>
-			<id>sk89q-mvn2</id>
-			<url>http://mvn2.sk89q.com/repo</url>
-		</repository>
+            <id>sk89q-mvn2</id>
+            <url>http://mvn2.sk89q.com/repo</url>
+        </repository>
         <!-- Bukkit-related stuff -->
         <repository>
             <id>bukkit-repo</id>
@@ -59,7 +59,7 @@
             <version>1.0.1-R1</version>
             <type>jar</type>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>1.0.1-R1</version>
@@ -74,7 +74,7 @@
         </dependency>
     </dependencies>
     <organization>
-    	<name>BananaCode</name>
-    	<url>http://bananaco.de/</url>
+        <name>BananaCode</name>
+        <url>http://bananaco.de/</url>
     </organization>
 </project>
