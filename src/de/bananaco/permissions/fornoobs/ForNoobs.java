@@ -3,7 +3,10 @@ package de.bananaco.permissions.fornoobs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+
 import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bananaco.bpermissions.api.World;
@@ -12,7 +15,7 @@ import de.bananaco.bpermissions.api.WorldManager;
 public class ForNoobs {
 	private final WorldManager wm = WorldManager.getInstance();
 	private final JavaPlugin plugin;
-	
+
 	public ForNoobs(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
@@ -27,20 +30,26 @@ public class ForNoobs {
 	}
 
 	private void addDefaults(World world) throws Exception {
-		ArrayList<String> regPerms = getPermissions();
+        List<String> regPerms = getNormalPermissions();
+        List<String> opPerms = getOPPermissions();
 		// Do the groups first
 		String admin = "admin";
 		String mod = "moderator";
 		String def = world.getDefaultGroup();
 		// Let's sort the permissions into shizzledizzle
 		for(String perm : regPerms) {
-			if(perm.contains("user") || perm.contains("build"))
-				world.getGroup(def).addPermission(perm, true);
-			else if(perm.contains(".ban") || perm.contains(".kick") || perm.contains(".mod") || perm.contains(".fly"))
+			// Users now get all the nodes, they'll auto be true or false, based on what the plugin specified.
+			world.getGroup(def).addPermission(perm, true);
+            // Try to add some common ones to mods. This doesn't work well atm, because perms can be given op or not
+            // which kinda exclusdes the poor moderators :/ But this is just a default!
+			if(perm.contains(".ban") || perm.contains(".kick") || perm.contains(".mod") || perm.contains(".fly"))
 				world.getGroup(mod).addPermission(perm, true);
-			else
-				world.getGroup(admin).addPermission(perm, true);
 		}
+        // Thes perms were desginated by plugin developers for OPs.
+        // We'll give them to the admins.
+        for (String perm : opPerms) {
+            world.getGroup(admin).addPermission(perm, true);
+        }
 		// admin
 		world.getGroup(admin).addGroup(mod);
 		world.getGroup(admin).addPermission("group."+mod, false);
@@ -73,20 +82,46 @@ public class ForNoobs {
 		world.save();
 	}
 
-	private ArrayList<String> getPermissions() {
-		ArrayList<String> regPerms = new ArrayList<String>();
-		for (Permission p : plugin.getServer().getPluginManager().getPermissions()) {
-			if (!p.getName().equals("*") && !p.getName().equals("*.*"))
-				regPerms.add(p.getName());
-		}
-		Collections.sort(regPerms, new Comparator<String>() {
+    private List<String> getOPPermissions() {
+   		List<String> regPerms = new ArrayList<String>();
+   		for (Permission p : plugin.getServer().getPluginManager().getPermissions()) {
+   			if (!p.getName().equals("*") && !p.getName().equals("*.*")) {
+                // If the default was intended as false, this perm could harm people.
+                if (p.getDefault() == PermissionDefault.FALSE ||  p.getDefault() == PermissionDefault.NOT_OP) {
+                    regPerms.add("^" + p.getName());
+                } else {
+                    // PermissionDefault.FALSE or PermissionDefault.OP
+                    regPerms.add(p.getName());
+                }
+            }
+   		}
+   		Collections.sort(regPerms, new Comparator<String>() {
+   			public int compare(String a, String b) {
+   				return a.compareTo(b);
+   			};
+   		});
+   		return regPerms;
+   	}
 
-			public int compare(String a, String b) {
-				return a.compareTo(b);
-			};
-		});
-
-		return regPerms;
-	}
+    private List<String> getNormalPermissions() {
+    		List<String> opPerms = new ArrayList<String>();
+    		for (Permission p : plugin.getServer().getPluginManager().getPermissions()) {
+    			if (!p.getName().equals("*") && !p.getName().equals("*.*")) {
+                    // If the default was intended as false, this perm could harm people.
+                    if (p.getDefault() == PermissionDefault.FALSE || p.getDefault() == PermissionDefault.OP) {
+                        opPerms.add("^" + p.getName());
+                    } else {
+                        // PermissionDefault.FALSE or PermissionDefault.NOT_OP
+                        opPerms.add(p.getName());
+                    }
+                }
+    		}
+    		Collections.sort(opPerms, new Comparator<String>() {
+    			public int compare(String a, String b) {
+    				return a.compareTo(b);
+    			};
+    		});
+    		return opPerms;
+    	}
 
 }
